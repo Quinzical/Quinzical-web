@@ -109,3 +109,35 @@ body {
 .input:active {
   box-shadow: none;
 }
+
+.page-404 {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  outline: none;
+  padding: 8vh;
+}
+
+.page-404__message {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.page-404__error {
+  color: #dd2200;
+  font-size: calc((202 / 16) * 1rem);
+  font-weight: 400;
+}
+
+.page-404__text {
+  font-size: calc((80 / 16) * 1rem);
+}
+
+.page-404__button {
+  margin-top: 8vh;
+}

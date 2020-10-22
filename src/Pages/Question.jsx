@@ -1,29 +1,47 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 
 import Button from '../Components/Button';
 
 import './Home.css';
 import Input from '../Components/Input';
 
-const Question = ({ play }) => {
-    const [username, setUsername] = useState('')
+const timeout = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const Question = ({ timer, question, submit }) => {
+    const [count, setCount] = useState(timer / 1000);
+    const [answer, setAnswer] = useState("")
+
+
+
+    useEffect(() => {
+        const counter = async () => {
+            while (count > 0) {
+                await timeout(1000);
+                setCount(count - 1)
+            }
+        }
+        counter()
+    }, [])
 
     return (
         <Fragment>
             <div className="menu__content">
-                <p style={{ color: 'white', fontSize: 120, margin: 0 }}>QUINZICAL</p>
+                <p style={{ color: 'white', fontSize: 120, margin: 0 }}>count</p>
+                <p style={{ color: 'white', fontSize: 120, margin: 0 }}>{question}</p>
                 <div style={{ margin: 10, marginTop: 50, marginBottom: 50 }}>
                     <Input
                         className="menu__username"
-                        placeholder="Username"
+                        placeholder="Answer"
                         pattern=".{1,}"
-                        value={username}
+                        value={answer}
                         style={{ margin: 'auto', left: -6, maxWidth: 400, backgroundColor: "black" }}
-                        onChange={e => setUsername(e.target.value)}
+                        onChange={e => setAnswer(e.target.value)}
                     />
                 </div>
                 <div className="menu__buttons">
-                    <Button onClick={() => play(username)}>Play</Button>
+                    <Button onClick={() => submit(answer)}>Submit</Button>
                 </div>
             </div>
         </Fragment>

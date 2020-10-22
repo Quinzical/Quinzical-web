@@ -1,11 +1,13 @@
 import { Button, Grid, FormControl, Input, InputLabel } from "@material-ui/core"
 import React, { useEffect, useState, Suspense } from "react"
 import socketIOClient from "socket.io-client"
-import Stars from './Components/Star'
+import Star from './Components/Star'
 import prerender from './Utils/prerender'
 
 import Home from "./Pages/Home"
 import Lobby from "./Pages/Lobby"
+import { useHistory, useParams } from "react-router-dom"
+import Countdown from "./Pages/Countdown"
 import Question from "./Pages/Question"
 
 const ENDPOINT = "http://127.0.0.1:3000"
@@ -19,29 +21,37 @@ const states = {
     KILL: 'kill',
     WINNER: 'winner'
 }
-
 const App = () => {
-    const [code, setCode] = useState("")
+    let { code } = useParams()
     const [username, setUsername] = useState("")
     const [users, setUsers] = useState({})
     const [room, setRoom] = useState(null)
-    const [state, setState] = useState(states.LOGIN)
+    const [state, setState] = useState(states.QUESTION)
+
+    const history = useHistory()
 
     useEffect(() => {
+        console.log(code)
         socket.on("users", users => {
             setUsers(users)
             console.log()
         })
 
-        socket.on("createRoom", room => {
+        /*socket.on("createRoom", room => {
             setRoom(room)
             setCode(room.code)
-        })
+        })*/
 
         socket.on("joinRoom", room => {
             setRoom(room)
             console.log(room)
         })
+        
+        socket.on("startingGame", room => {
+            console.log("starting")
+            setState(states.COUNTER)
+        })
+
 
         socket.on("question", ({ question, qualifer, answer }) => {
         })
@@ -52,6 +62,7 @@ const App = () => {
 
         socket.on("error", data => {
             alert(data)
+            history.push('/')
         })
     }, [])
 
@@ -62,11 +73,16 @@ const App = () => {
     }, [username])
 
     const play = (username) => {
+        if (username === "") {
+            alert("username not set")
+            return
+        }
         setUsername(username)
         socket.emit("username", {
             username: username,
         })
         setState(states.LOBBY)
+        joinRoom()
     }
 
     const createRoom = () => {
@@ -89,6 +105,7 @@ const App = () => {
         })
     }
 
+
     return (
         <section className="menu">
             <title>QUINZICAL</title>
@@ -98,28 +115,14 @@ const App = () => {
             />
             {!prerender &&
                 <Suspense fallback={null}>
-                    <Stars />
+                    <Star />
                 </Suspense>
             }
-            {state===states.LOGIN && <Home play={play}/>}
-            {state===states.LOBBY && <Lobby play={play}/>}
+            {state === states.LOGIN && <Home play={play} />}
+            {state === states.LOBBY && <Lobby room={room} userID={socket.id} users={users} start={startGame} />}
+            {state === states.COUNTER && <Countdown/>}
+            {state === states.QUESTION && <Question timer={10000} qualifer={"What is"} question={"Who made this game"} submit={answer=>console.log(answer)}/>}
         </section>
-    )
-
-    return (
-        <Grid container direction="column" justify="space-around" alignItems="center">
-            <FormControl>
-                <InputLabel htmlFor="my-input">Username</InputLabel>
-                <Input value={username} onChange={e => setUsername(e.target.value)} />
-            </FormControl>
-            <FormControl>
-                <InputLabel htmlFor="my-input">Lobby Code</InputLabel>
-                <Input value={code} onChange={e => setCode(e.target.value)} />
-            </FormControl>
-            <Button variant="contained" color="primary" onClick={createRoom}>createRoom</Button>
-            <Button variant="contained" color="primary" onClick={startGame}>startGame</Button>
-            <Button variant="contained" color="primary" onClick={joinRoom}>joinRoom</Button>
-        </Grid>
     )
 }
 
