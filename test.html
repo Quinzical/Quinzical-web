@@ -7,7 +7,6 @@
       var code = "";
 
       socket.on("connect", () => {
-        // or with emit() and custom event names
         socket.emit("username", {
           username: "test",
         });
@@ -18,7 +17,7 @@
         });
       });
 
-      socket.on("createRoom", function(room) {
+      socket.on("createRoom", (room) => {
         code = room.code;
         console.log(room);
         document.getElementById("code").textContent = room.code;

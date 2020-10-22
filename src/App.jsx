@@ -110,6 +110,13 @@ const App = () => {
         })
     }
 
+    const sendAnswer = () => {
+        socket.emit("answer", {
+            code: code,
+            answer: answer
+        })
+    }
+
 
     return (
         <section className="menu">
