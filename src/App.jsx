@@ -9,6 +9,7 @@ import Lobby from "./Pages/Lobby"
 import { useHistory, useParams } from "react-router-dom"
 import Countdown from "./Pages/Countdown"
 import Question from "./Pages/Question"
+import Eject from "./Pages/Eject"
 
 const ENDPOINT = "http://127.0.0.1:3000"
 const socket = socketIOClient(ENDPOINT)
@@ -18,7 +19,8 @@ const states = {
     LOBBY: 'lobby',
     COUNTER: 'counter',
     QUESTION: 'question',
-    KILL: 'kill',
+    EJECT: 'eject',
+    DISCUSSION: 'discussion',
     WINNER: 'winner'
 }
 const App = () => {
@@ -26,7 +28,10 @@ const App = () => {
     const [username, setUsername] = useState("")
     const [users, setUsers] = useState({})
     const [room, setRoom] = useState(null)
-    const [state, setState] = useState(states.QUESTION)
+    const [state, setState] = useState(states.EJECT)
+    const [question, setQuestion] = useState("")
+    const [qualifer, setQualifer] = useState("")
+    const [answer, setAnswer] = useState("")
 
     const history = useHistory()
 
@@ -54,6 +59,14 @@ const App = () => {
 
 
         socket.on("question", ({ question, qualifer, answer }) => {
+            setQuestion(question)
+            setQualifer(qualifer)
+            setAnswer(answer)
+            setState(states.QUESTION)
+        })
+
+        socket.on("discussion", ({}) => {
+            setState(states.DISCUSSION)
         })
 
         socket.on("end", room => {
@@ -85,14 +98,6 @@ const App = () => {
         joinRoom()
     }
 
-    const createRoom = () => {
-        socket.emit("createRoom", {
-            host: username,
-            timer: 10,
-            international: false,
-        })
-    }
-
     const startGame = () => {
         socket.emit("startGame", {
             code: code
@@ -121,7 +126,8 @@ const App = () => {
             {state === states.LOGIN && <Home play={play} />}
             {state === states.LOBBY && <Lobby room={room} userID={socket.id} users={users} start={startGame} />}
             {state === states.COUNTER && <Countdown/>}
-            {state === states.QUESTION && <Question timer={10000} qualifer={"What is"} question={"Who made this game"} submit={answer=>console.log(answer)}/>}
+            {state === states.QUESTION && <Question timer={10000} qualifer={qualifer} question={question} submit={answer=>setAnswer(answer)}/>}
+            {state === states.EJECT && <Eject/>}
         </section>
     )
 }
