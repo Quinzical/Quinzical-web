@@ -5,13 +5,13 @@ import Button from '../Components/Button';
 import './Home.css';
 import Input from '../Components/Input';
 
-const Home = ({ play }) => {
+const Lobby = ({ play }) => {
     const [username, setUsername] = useState('')
 
     return (
         <Fragment>
             <div className="menu__content">
-                <p style={{ color: 'white', fontSize: 120, margin: 0 }}>QUINZICAL</p>
+                <p style={{ color: 'white', fontSize: 120, margin: 0 }}>Lobby</p>
                 <div style={{ margin: 10, marginTop: 50, marginBottom: 50 }}>
                     <Input
                         className="menu__username"
@@ -30,4 +30,4 @@ const Home = ({ play }) => {
     );
 };
 
-export default Home;
+export default Lobby;

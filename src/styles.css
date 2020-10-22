@@ -1,0 +1,111 @@
+body {
+  background-color: black;
+  font-family: "Joffrey";
+  padding: 0px;
+  margin: 0px;
+}
+
+@font-face {
+  font-family: "Joffrey";
+  src: url("/Joffrey.ttf");
+}
+
+.stars {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.button {
+  --buttonOffset: 20;
+  --buttonFontSize: calc((90 / 16) * 1rem);
+  --buttonPadding: 0 36px;
+  --buttonTextColor: rgb(255, 255, 255);
+  --buttonTextVisibility: visible;
+
+  align-items: center;
+  border-radius: 12px;
+  border: 5px solid white;
+  background-color: black;
+  color: var(--buttonTextColor);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  outline: none;
+  padding: var(--buttonPadding);
+  position: relative;
+}
+
+.button--secondary {
+  --buttonOffset: 0;
+  --buttonPadding: 8px 16px;
+
+  font-family: sans-serif;
+  font-weight: 400;
+}
+
+.button:hover,
+.button:focus {
+  border: 5px solid #01ff00;
+}
+
+.button:active {
+  box-shadow: none;
+}
+
+.button__text {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  font-size: var(--buttonFontSize);
+  justify-content: center;
+  line-height: 1;
+  position: relative;
+  top: calc(var(--buttonFontSize) / var(--buttonOffset));
+  visibility: var(--buttonTextVisibility);
+}
+
+.menu__nav-button {
+  --buttonFontSize: calc((56 / 16) * 1rem);
+
+  bottom: 12px;
+  left: 12px;
+  position: fixed;
+}
+
+.input {
+  --inputFontSize: calc((40 / 16) * 1rem);
+  --inputTextColor: rgb(255, 255, 255);
+  --inputTextVisibility: visible;
+
+  border-radius: 12px;
+  border: 6px solid white;
+  cursor: pointer;
+  outline: 0;
+  position: relative;
+}
+
+.input,
+.input::placeholder {
+  color: var(--inputTextColor);
+  font-family: sans-serif;
+  font-size: var(--inputFontSize);
+  font-weight: 400;
+  line-height: 1.2;
+  opacity: 1;
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.input:hover,
+.input:focus {
+  border: 6px solid #01ff00;
+}
+
+.input:active {
+  box-shadow: none;
+}

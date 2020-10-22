@@ -5,7 +5,7 @@ import Button from '../Components/Button';
 import './Home.css';
 import Input from '../Components/Input';
 
-const Home = ({ play }) => {
+const Question = ({ play }) => {
     const [username, setUsername] = useState('')
 
     return (
@@ -30,4 +30,4 @@ const Home = ({ play }) => {
     );
 };
 
-export default Home;
+export default Question;
