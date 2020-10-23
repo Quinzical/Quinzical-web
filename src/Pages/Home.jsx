@@ -37,7 +37,7 @@ const Home = () => {
                 {
                     Object.keys(rooms).map((value) => {
                         if (rooms[value].lobby) {
-                            return <Button onClick={() => history.push('/' + value)}>{value}</Button>
+                            return <><br/><Button onClick={() => history.push('/' + value)}>{value}</Button></>
                         }
                     })
                 }

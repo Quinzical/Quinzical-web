@@ -10,6 +10,8 @@ import Countdown from "./Pages/Countdown"
 import Question from "./Pages/Question"
 import Eject from "./Pages/Eject"
 import Discussion from "./Pages/Discussion"
+import Tie from "./Pages/Tie"
+import Win from "./Pages/Win"
 
 const ENDPOINT = process.env.REACT_APP_API
 const socket = socketIOClient(ENDPOINT)
@@ -21,7 +23,8 @@ const states = {
     QUESTION: 'question',
     EJECT: 'eject',
     DISCUSSION: 'discussion',
-    WINNER: 'winner'
+    WIN: 'win',
+    TIE: 'tie'
 }
 
 
@@ -36,16 +39,20 @@ const App = () => {
     const [room, setRoom] = useState(null)
     const [state, setState] = useState(states.LOGIN)
 
-    let playing = false;
+    const [playing, setPlaying] = useState(false)
+    //let playing = false;
 
     const [eject, setEject] = useState("Incorrect")
     const [question, setQuestion] = useState("")
     const [qualifier, setQualifier] = useState("")
     const [answer, setAnswer] = useState("")
 
+    const [winner, setWinner] = useState("")
+
     const history = useHistory()
 
     useEffect(() => {
+        let play = false
         console.log(code)
         socket.on("users", users => {
             setUsers(users)
@@ -57,12 +64,13 @@ const App = () => {
         })*/
 
         socket.on("joinRoom", room => {
-            playing = true
+            setPlaying(true)
+            play = true
             setRoom(room)
         })
 
         socket.on("startingGame", room => {
-            if (playing) {
+            if (play) {
                 console.log("starting")
                 setState(states.COUNTER)
             }
@@ -70,7 +78,7 @@ const App = () => {
 
 
         socket.on("question", ({ question, qualifier, answer }) => {
-            if (playing) {
+            if (play) {
                 setQuestion(question)
                 setQualifier(qualifier)
                 setAnswer(answer)
@@ -79,17 +87,41 @@ const App = () => {
         })
 
         socket.on("end", async room => {
-            if (playing || state != states.DISCUSSION) {
+            if (play || state != states.DISCUSSION) {
                 setState(states.EJECT)
                 console.log(room)
                 if (room.correct.includes(socket.id)) {
 
                 } else {
-
+                    play = false
+                    setPlaying(false)
                 }
                 setRoom(room)
                 await timeout(3000)
                 setState(states.DISCUSSION)
+            }
+        })
+
+        socket.on("win", async room => {
+            if (play || state != states.DISCUSSION) {
+                setState(states.EJECT)
+                play = false
+                setPlaying(false)
+                setRoom(room)
+                setWinner(room.correct[0])
+                await timeout(3000)
+                setState(states.WIN)
+            }
+        })
+
+        socket.on("tie", async room => {
+            if (play || state != states.DISCUSSION) {
+                setState(states.EJECT)
+                play = false
+                setPlaying(false)
+                setRoom(room)
+                await timeout(3000)
+                setState(states.TIE)
             }
         })
 
@@ -156,6 +188,8 @@ const App = () => {
             {state === states.QUESTION && <Question playing={playing} timer={room.timer} qualifier={qualifier} question={question} answer={answer} submit={answer => sendAnswer(answer)} />}
             {state === states.EJECT && <Eject eject={eject} />}
             {state === states.DISCUSSION && <Discussion room={room} userID={socket.id} users={users} playing={playing} />}
+            {state === states.TIE && <Tie/>}
+            {state === states.WIN && <Win users={users} current={username} user={winner}/>}
         </section>
     )
 }

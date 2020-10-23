@@ -47,7 +47,7 @@ const Question = ({ playing, timer, question, qualifier, submit, answer }) => {
                     }
                 </div>
                 <div className="menu__buttons">
-                    <Button onClick={() => {submit(userAnswer);setSubmitted(true)}}>Submit</Button>
+                    <Button onClick={() => {if (!submitted) {submit(userAnswer);setSubmitted(true)}}}>Submit</Button>
                 </div>
             </div>
         </Fragment>
