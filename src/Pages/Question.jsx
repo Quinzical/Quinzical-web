@@ -34,20 +34,26 @@ const Question = ({ playing, timer, question, qualifier, submit, answer }) => {
                     <p style={{ color: 'white', fontSize: 80, margin: 0 }}>{question}</p>
                 </center>
                 <div style={{ margin: 10, marginTop: 50, marginBottom: 50 }}>
-                    { playing? !submitted?
+                    {playing ? !submitted ?
                         <Input
                             className="menu__username"
                             placeholder="Answer"
                             pattern=".{1,}"
                             value={userAnswer}
                             style={{ margin: 'auto', left: -6, maxWidth: 400, backgroundColor: "black" }}
-                            onChange={e => setAnswer(e.target.value)}
-                        />:<p style={{ color: 'white', fontSize: 40, margin: 0 }}>Waiting...</p>
-                        :<p style={{ color: 'white', fontSize: 40, margin: 0 }}>Spectating</p>
+                            onChange={e => {
+                                setAnswer(e.target.value)
+                                if (e.keyCode == 13) {
+                                    submit(userAnswer)
+                                    setSubmitted(true)
+                                }
+                            }}
+                        /> : <p style={{ color: 'white', fontSize: 40, margin: 0 }}>Waiting...</p>
+                        : <p style={{ color: 'white', fontSize: 40, margin: 0 }}>Spectating</p>
                     }
                 </div>
                 <div className="menu__buttons">
-                    <Button onClick={() => {if (!submitted) {submit(userAnswer);setSubmitted(true)}}}>Submit</Button>
+                    <Button onClick={() => { if (!submitted) { submit(userAnswer); setSubmitted(true) } }}>Submit</Button>
                 </div>
             </div>
         </Fragment>

@@ -3,8 +3,7 @@ import axios from 'axios'
 import Button from '../Components/Button';
 
 import './Home.css';
-import Input from '../Components/Input';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 /*
 room = {

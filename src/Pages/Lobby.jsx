@@ -1,10 +1,7 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment } from 'react'
 
-import Button from '../Components/Button';
-
-import './Home.css';
-import Input from '../Components/Input';
-import { useParams } from 'react-router-dom';
+import './Home.css'
+import { useParams } from 'react-router-dom'
 
 /*
 room = {
