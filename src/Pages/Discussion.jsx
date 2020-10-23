@@ -13,20 +13,18 @@ room = {
     answer: "",
 } */
 
-const Discussion = ({ room }) => {
-    console.log(users)
-
+const Discussion = ({ room, users, userID, playing }) => {
     return (
         <Fragment>
             <div className="menu__content">
                 <p style={{ color: 'white', fontSize: 120, margin: 0 }}>Remaining:</p>
                 <div style={{ margin: 10, marginTop: 50, marginBottom: 50 }}>
-                    {room?.users?.map(user => {
+                    {room?.correct?.map(user => {
                         return <p style={{ color: userID === user ? '#01ff00' : 'white', fontSize: 50 }} key={user}>{users[user]}</p>
                     })}
                 </div>
                 <div className="menu__buttons">
-                    <p style={{ color: 'white', fontSize: 60, margin: 0 }}>waiting for host...</p>
+                    <p style={{ color: 'white', fontSize: 60, margin: 0 }}>{playing ? "waiting for host..." : "spectating"}</p>
                 </div>
             </div>
         </Fragment>

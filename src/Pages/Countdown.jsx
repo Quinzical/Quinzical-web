@@ -15,7 +15,7 @@ const Countdown = () => {
             }
         }
         counter()
-    }, [])
+    }, [count])
 
     return (
         <Fragment>

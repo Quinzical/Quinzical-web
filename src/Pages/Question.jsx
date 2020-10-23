@@ -9,13 +9,15 @@ const timeout = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const Question = ({ timer, question, submit }) => {
+const Question = ({ playing, timer, question, qualifier, submit, answer }) => {
     const [count, setCount] = useState(timer / 1000);
-    const [answer, setAnswer] = useState("")
+    const [userAnswer, setAnswer] = useState("")
+    const [submitted, setSubmitted] = useState(false)
 
     useEffect(() => {
+        console.log(playing)
         const counter = async () => {
-            if (count > 0){
+            if (count > 0) {
                 await timeout(1000);
                 setCount(count - 1)
             }
@@ -27,19 +29,25 @@ const Question = ({ timer, question, submit }) => {
         <Fragment>
             <div className="menu__content">
                 <p style={{ color: 'white', fontSize: 120, margin: 0 }}>{count}</p>
-                <p style={{ color: 'white', fontSize: 80, margin: 0 }}>{question}</p>
+                <center>
+                    <p style={{ color: 'white', fontSize: 50, margin: 0 }}>{qualifier}</p>
+                    <p style={{ color: 'white', fontSize: 80, margin: 0 }}>{question}</p>
+                </center>
                 <div style={{ margin: 10, marginTop: 50, marginBottom: 50 }}>
-                    <Input
-                        className="menu__username"
-                        placeholder="Answer"
-                        pattern=".{1,}"
-                        value={answer}
-                        style={{ margin: 'auto', left: -6, maxWidth: 400, backgroundColor: "black" }}
-                        onChange={e => setAnswer(e.target.value)}
-                    />
+                    { playing? !submitted?
+                        <Input
+                            className="menu__username"
+                            placeholder="Answer"
+                            pattern=".{1,}"
+                            value={userAnswer}
+                            style={{ margin: 'auto', left: -6, maxWidth: 400, backgroundColor: "black" }}
+                            onChange={e => setAnswer(e.target.value)}
+                        />:<p style={{ color: 'white', fontSize: 40, margin: 0 }}>Waiting...</p>
+                        :<p style={{ color: 'white', fontSize: 40, margin: 0 }}>Spectating</p>
+                    }
                 </div>
                 <div className="menu__buttons">
-                    <Button onClick={() => submit(answer)}>Submit</Button>
+                    <Button onClick={() => {submit(userAnswer);setSubmitted(true)}}>Submit</Button>
                 </div>
             </div>
         </Fragment>

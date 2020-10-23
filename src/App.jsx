@@ -1,17 +1,17 @@
-import { Button, Grid, FormControl, Input, InputLabel } from "@material-ui/core"
 import React, { useEffect, useState, Suspense } from "react"
 import socketIOClient from "socket.io-client"
 import Star from './Components/Star'
 import prerender from './Utils/prerender'
 
-import Home from "./Pages/Home"
+import Username from "./Pages/Username"
 import Lobby from "./Pages/Lobby"
 import { useHistory, useParams } from "react-router-dom"
 import Countdown from "./Pages/Countdown"
 import Question from "./Pages/Question"
 import Eject from "./Pages/Eject"
+import Discussion from "./Pages/Discussion"
 
-const ENDPOINT = "http://127.0.0.1:3000"
+const ENDPOINT = process.env.REACT_APP_API
 const socket = socketIOClient(ENDPOINT)
 
 const states = {
@@ -23,14 +23,24 @@ const states = {
     DISCUSSION: 'discussion',
     WINNER: 'winner'
 }
+
+
+const timeout = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const App = () => {
     let { code } = useParams()
     const [username, setUsername] = useState("")
     const [users, setUsers] = useState({})
     const [room, setRoom] = useState(null)
-    const [state, setState] = useState(states.EJECT)
+    const [state, setState] = useState(states.LOGIN)
+
+    let playing = false;
+
+    const [eject, setEject] = useState("Incorrect")
     const [question, setQuestion] = useState("")
-    const [qualifer, setQualifer] = useState("")
+    const [qualifier, setQualifier] = useState("")
     const [answer, setAnswer] = useState("")
 
     const history = useHistory()
@@ -39,7 +49,6 @@ const App = () => {
         console.log(code)
         socket.on("users", users => {
             setUsers(users)
-            console.log()
         })
 
         /*socket.on("createRoom", room => {
@@ -48,29 +57,40 @@ const App = () => {
         })*/
 
         socket.on("joinRoom", room => {
+            playing = true
             setRoom(room)
-            console.log(room)
         })
-        
+
         socket.on("startingGame", room => {
-            console.log("starting")
-            setState(states.COUNTER)
+            if (playing) {
+                console.log("starting")
+                setState(states.COUNTER)
+            }
         })
 
 
-        socket.on("question", ({ question, qualifer, answer }) => {
-            setQuestion(question)
-            setQualifer(qualifer)
-            setAnswer(answer)
-            setState(states.QUESTION)
+        socket.on("question", ({ question, qualifier, answer }) => {
+            if (playing) {
+                setQuestion(question)
+                setQualifier(qualifier)
+                setAnswer(answer)
+                setState(states.QUESTION)
+            }
         })
 
-        socket.on("discussion", ({}) => {
-            setState(states.DISCUSSION)
-        })
+        socket.on("end", async room => {
+            if (playing || state != states.DISCUSSION) {
+                setState(states.EJECT)
+                console.log(room)
+                if (room.correct.includes(socket.id)) {
 
-        socket.on("end", room => {
-            setRoom(room)
+                } else {
+
+                }
+                setRoom(room)
+                await timeout(3000)
+                setState(states.DISCUSSION)
+            }
         })
 
         socket.on("error", data => {
@@ -110,7 +130,7 @@ const App = () => {
         })
     }
 
-    const sendAnswer = () => {
+    const sendAnswer = (answer) => {
         socket.emit("answer", {
             code: code,
             answer: answer
@@ -130,11 +150,12 @@ const App = () => {
                     <Star />
                 </Suspense>
             }
-            {state === states.LOGIN && <Home play={play} />}
+            {state === states.LOGIN && <Username play={play} />}
             {state === states.LOBBY && <Lobby room={room} userID={socket.id} users={users} start={startGame} />}
-            {state === states.COUNTER && <Countdown/>}
-            {state === states.QUESTION && <Question timer={10000} qualifer={qualifer} question={question} submit={answer=>setAnswer(answer)}/>}
-            {state === states.EJECT && <Eject/>}
+            {state === states.COUNTER && <Countdown />}
+            {state === states.QUESTION && <Question playing={playing} timer={room.timer} qualifier={qualifier} question={question} answer={answer} submit={answer => sendAnswer(answer)} />}
+            {state === states.EJECT && <Eject eject={eject} />}
+            {state === states.DISCUSSION && <Discussion room={room} userID={socket.id} users={users} playing={playing} />}
         </section>
     )
 }

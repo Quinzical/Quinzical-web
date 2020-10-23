@@ -8,13 +8,14 @@ import {
 } from "react-router-dom";
 import App from './App'
 import NotFound from './Pages/404';
+import Home from './Pages/Home';
 import './styles.css'
 
 ReactDOM.render(
     <React.StrictMode>
         <Router>
             <Switch>
-                <Route exact path="/" component={NotFound} />
+                <Route exact path="/" component={Home} />
                 <Route path="/:code" component={App} />
                 <Route component={NotFound} />
             </Switch>
