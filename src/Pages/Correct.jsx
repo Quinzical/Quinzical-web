@@ -1,17 +1,17 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment } from 'react';
 
 import './Home.css';
 
-const Eject = ({ eject }) => {
+const Correct = () => {
     return (
         <Fragment>
             <center>
                 <div className="menu__content typewriter">
-                    <p style={{ color: 'white', fontSize: "8vw", margin: 0 }}>{eject}</p>
+                    <p style={{ color: 'white', fontSize: "8vw", margin: 0 }}>Correct</p>
                 </div>
             </center>
         </Fragment>
     );
 };
 
-export default Eject;
+export default Correct;

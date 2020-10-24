@@ -15,7 +15,6 @@ const Question = ({ playing, timer, question, qualifier, submit, answer }) => {
     const [submitted, setSubmitted] = useState(false)
 
     useEffect(() => {
-        console.log(playing)
         const counter = async () => {
             if (count > 0) {
                 await timeout(1000);

@@ -8,10 +8,11 @@ import Lobby from "./Pages/Lobby"
 import { useHistory, useParams } from "react-router-dom"
 import Countdown from "./Pages/Countdown"
 import Question from "./Pages/Question"
-import Eject from "./Pages/Eject"
 import Discussion from "./Pages/Discussion"
 import Tie from "./Pages/Tie"
 import Win from "./Pages/Win"
+import Correct from "./Pages/Correct"
+import Incorrect from "./Pages/Incorrect"
 
 const ENDPOINT = process.env.REACT_APP_API
 const socket = socketIOClient(ENDPOINT)
@@ -21,7 +22,8 @@ const states = {
     LOBBY: 'lobby',
     COUNTER: 'counter',
     QUESTION: 'question',
-    EJECT: 'eject',
+    CORRECT: 'correct',
+    INCORRECT: 'incorrect',
     DISCUSSION: 'discussion',
     WIN: 'win',
     TIE: 'tie'
@@ -42,7 +44,6 @@ const App = () => {
     const [playing, setPlaying] = useState(false)
     //let playing = false;
 
-    const [eject, setEject] = useState("Incorrect")
     const [question, setQuestion] = useState("")
     const [qualifier, setQualifier] = useState("")
     const [answer, setAnswer] = useState("")
@@ -88,11 +89,11 @@ const App = () => {
 
         socket.on("end", async room => {
             if (play || state != states.DISCUSSION) {
-                setState(states.EJECT)
                 console.log(room)
                 if (room.correct.includes(socket.id)) {
-
+                    setState(states.CORRECT)
                 } else {
+                    setState(states.INCORRECT)
                     play = false
                     setPlaying(false)
                 }
@@ -104,7 +105,13 @@ const App = () => {
 
         socket.on("win", async room => {
             if (play || state != states.DISCUSSION) {
-                setState(states.EJECT)
+                if (room.correct.includes(socket.id)) {
+                    setState(states.CORRECT)
+                } else {
+                    setState(states.INCORRECT)
+                    play = false
+                    setPlaying(false)
+                }
                 play = false
                 setPlaying(false)
                 setRoom(room)
@@ -116,7 +123,13 @@ const App = () => {
 
         socket.on("tie", async room => {
             if (play || state != states.DISCUSSION) {
-                setState(states.EJECT)
+                if (room.correct.includes(socket.id)) {
+                    setState(states.CORRECT)
+                } else {
+                    setState(states.INCORRECT)
+                    play = false
+                    setPlaying(false)
+                }
                 play = false
                 setPlaying(false)
                 setRoom(room)
@@ -186,10 +199,11 @@ const App = () => {
             {state === states.LOBBY && <Lobby room={room} userID={socket.id} users={users} start={startGame} />}
             {state === states.COUNTER && <Countdown />}
             {state === states.QUESTION && <Question playing={playing} timer={room.timer} qualifier={qualifier} question={question} answer={answer} submit={answer => sendAnswer(answer)} />}
-            {state === states.EJECT && <Eject eject={eject} />}
+            {state === states.CORRECT && <Correct />}
+            {state === states.INCORRECT && <Incorrect />}
             {state === states.DISCUSSION && <Discussion room={room} userID={socket.id} users={users} playing={playing} />}
-            {state === states.TIE && <Tie/>}
-            {state === states.WIN && <Win users={users} current={username} user={winner}/>}
+            {state === states.TIE && <Tie />}
+            {state === states.WIN && <Win users={users} current={username} user={winner} />}
         </section>
     )
 }
