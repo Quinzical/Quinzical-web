@@ -77,6 +77,11 @@ const App = () => {
             }
         })
 
+        socket.on("restartRoom", room => {
+            console.log("restarting")
+            setRoom(room)
+            setState(states.LOBBY)
+        })
 
         socket.on("question", ({ question, qualifier, answer }) => {
             if (play) {
