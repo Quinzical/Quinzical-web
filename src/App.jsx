@@ -80,6 +80,8 @@ const App = () => {
         socket.on("restartRoom", room => {
             console.log("restarting")
             setRoom(room)
+            play = true
+            setPlaying(true)
             setState(states.LOBBY)
         })
 
