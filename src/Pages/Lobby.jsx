@@ -24,9 +24,9 @@ const Lobby = ({ room, userID, users, start }) => {
         <Fragment>
             <div className="menu__content">
                 <center>
-                <p style={{ color: 'white', fontSize: 120, margin: 0 }}>Lobby: {code}</p>
-                <p style={{ color: 'white', fontSize: 40, margin: 0 }}>Timer: {room?.timer / 1000} sec</p>
-                <p style={{ color: 'white', fontSize: 40, margin: 0 }}>International: {room?.international ? 'True' : 'False'}</p>
+                    <p style={{ color: 'white', fontSize: 120, margin: 0 }}>Lobby: {code}</p>
+                    <p style={{ color: 'white', fontSize: 40, margin: 0 }}>Timer: {room?.timer / 1000} sec</p>
+                    <p style={{ color: 'white', fontSize: 40, margin: 0 }}>International: {room?.international ? 'True' : 'False'}</p>
                 </center>
                 <br />
                 <p style={{ color: 'white', fontSize: 40, margin: 0 }}>Users: </p>
@@ -38,7 +38,9 @@ const Lobby = ({ room, userID, users, start }) => {
                     </center>
                 </div>
                 <div className="menu__buttons">
-                    <p style={{ color: 'white', fontSize: 60, margin: 0 }}>waiting for host...</p>
+                    <center>
+                        <p style={{ color: 'white', fontSize: 60, margin: 0 }}>waiting for host...</p>
+                    </center>
                 </div>
             </div>
         </Fragment>

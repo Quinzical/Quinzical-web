@@ -10,7 +10,8 @@ const Admin = () => {
 
     useEffect(() => {
         socket.on("question", question => {
-            setData([...data, question.answer])
+            console.log(data)
+            setData([...data, question])
         })
         socket.emit("admin")
     }, [])
@@ -19,7 +20,7 @@ const Admin = () => {
         <Fragment>
             <center>
                 {data.map(e => {
-                    return <p style={{ color: 'white', fontSize: "8vw", margin: 0 }}>e.answer</p>;
+                    return <p key={e} style={{ color: 'white', fontSize: "8vw", margin: 0 }}>{e.answer}</p>;
                 })}
             </center>
         </Fragment>
