@@ -9,6 +9,7 @@ import {
 import App from './App'
 import NotFound from './Pages/404';
 import Home from './Pages/Home';
+import Admin from './Pages/Admin';
 import './styles.css'
 
 ReactDOM.render(
@@ -16,6 +17,7 @@ ReactDOM.render(
         <Router>
             <Switch>
                 <Route exact path="/" component={Home} />
+                <Route exact path="/admin" component={Admin} />
                 <Route path="/:code" component={App} />
                 <Route component={NotFound} />
             </Switch>
