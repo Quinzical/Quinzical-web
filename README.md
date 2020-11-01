@@ -2,6 +2,20 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+The web client can be viewed [here](https://quinzical.gq/). Note that Quinizcal games must be set up using the Java Application. 
+
+## Game information
+
+Quinzical is a New Zealand based quiz application that aims to teach the user more about New Zealand. The target audience for this application is Young Adults, between the ages of 18 and 25.
+
+The web client allows users to setup and host, find or join online games using the Quinzicall Java Application. Any user on any device, without quinzical installed can join a hosted game at [website](https://quinzical.gq/) by adding the game code to the end of the link, like so:
+
+```https://quinzical.gq/S2UFJT```
+
+Users will be asked to enter a username, and can then proceed to play the game. 
+
+The web client can also be reached using a lobby specific QR code, generated in the Java Application.
+
 ## Available Scripts
 
 In the project directory, you can run:
